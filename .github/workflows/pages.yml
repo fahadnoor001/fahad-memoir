@@ -9,6 +9,10 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  # administration:write lets POST /repos/:owner/:repo/pages create a new
+  # Pages site with build_type=workflow when one doesn't exist yet. Without
+  # this, the enable call silently 403s and the site stays 404.
+  administration: write
 
 concurrency:
   group: pages
@@ -56,6 +60,10 @@ jobs:
               -d '{"build_type":"workflow"}') || true
             echo "PUT /pages → HTTP $put_status"
             cat /tmp/pages_put.json || true
+            if [ "$put_status" != "204" ] && [ "$put_status" != "200" ]; then
+              echo "::error::Failed to enable Pages via API. Enable manually at https://github.com/$REPO/settings/pages (Source: GitHub Actions)."
+              exit 1
+            fi
           fi
 
       - name: Setup Pages
