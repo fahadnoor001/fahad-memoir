@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nav Blur — Decision Comparison</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep:#0C0C0E;
+    --cream:#EAE3D0;
+    --gold:#B08A4A;
+    --gold-bright:#D4B073;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#111;color:var(--cream);font-family:'Inter',sans-serif;font-weight:300}
+  body{padding:48px 24px 96px;max-width:1200px;margin:0 auto}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:32px;letter-spacing:.02em;margin-bottom:8px}
+  .sub{color:#999;font-size:13px;margin-bottom:40px;max-width:720px;line-height:1.6}
+  .variant{margin-bottom:64px}
+  .variant h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:22px;margin-bottom:4px;color:var(--gold-bright)}
+  .variant .tag{display:inline-block;font-family:'Inter';font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#888;margin-bottom:14px}
+  .variant .notes{font-size:12px;color:#888;margin-top:10px;line-height:1.5;max-width:780px}
+  .stage{
+    position:relative;
+    height:320px;
+    border-radius:2px;
+    overflow:hidden;
+    background:url('assets/houston-skyline.jpg') center/cover no-repeat;
+    box-shadow:0 2px 24px rgba(0,0,0,.4);
+  }
+  .stage::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(12,12,14,0) 0%,rgba(12,12,14,.35) 70%,rgba(12,12,14,.7) 100%);
+    pointer-events:none;
+  }
+  .nav{
+    position:absolute;top:0;left:0;right:0;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;
+    z-index:2;
+  }
+  .brand{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:16px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream)}
+  .links{display:flex;gap:28px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream)}
+  .links span{cursor:default;opacity:.85}
+  .links span.active{color:var(--gold-bright);opacity:1}
+  .mute{
+    position:absolute;bottom:20px;right:24px;z-index:2;
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;color:var(--cream);
+    cursor:default;
+  }
+
+  /* ---------- Variant A: Solid, no blur ---------- */
+  .a .nav{
+    background:rgba(12,12,14,.95);
+    border-bottom:1px solid var(--gold);
+  }
+  .a .mute{
+    background:rgba(234,227,208,.10);
+    border:1px solid rgba(234,227,208,.35);
+  }
+
+  /* ---------- Variant B: Handoff blur ---------- */
+  .b .nav{
+    background:rgba(12,12,14,.35);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(234,227,208,.25);
+  }
+  .b .mute{
+    background:rgba(234,227,208,.10);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    border:1px solid rgba(234,227,208,.25);
+  }
+
+  /* ---------- Variant C: Hybrid (dark chrome blur only) ---------- */
+  .c .nav{
+    background:rgba(12,12,14,.55);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(234,227,208,.20);
+  }
+  .c .mute{
+    background:rgba(234,227,208,.12);
+    border:1px solid rgba(234,227,208,.30);
+  }
+
+  .caption{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:#777;margin-top:10px;font-family:'Inter'}
+  .caption code{background:#1b1b1e;color:#bbb;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:10px}
+</style>
+</head>
+<body>
+  <h1>Nav chrome — pick one</h1>
+  <p class="sub">Three treatments over the actual Houston skyline hero. Same type, same layout, same palette — only the glass changes. Scroll through; the one that reads right at a glance wins.</p>
+
+  <section class="variant a">
+    <span class="tag">Option A</span>
+    <h2>Solid fill, no blur</h2>
+    <div class="stage">
+      <div class="nav">
+        <div class="brand">Fahad Noor</div>
+        <div class="links"><span class="active">Biography</span><span>Powerlifting</span><span>Contact</span></div>
+      </div>
+      <div class="mute">♪</div>
+    </div>
+    <div class="caption">
+      <span>nav: <code>rgba(12,12,14,.95)</code> + 1px <code>#B08A4A</code> hairline</span>
+      <span>toggle: <code>cream@10%</code> solid</span>
+    </div>
+    <p class="notes">Honors the existing no-blur rule. Crisper type, predictable contrast over any photo. Trade-off: the nav reads as a hard band rather than floating glass.</p>
+  </section>
+
+  <section class="variant b">
+    <span class="tag">Option B</span>
+    <h2>Handoff as-designed — blur(16px) / blur(8px)</h2>
+    <div class="stage">
+      <div class="nav">
+        <div class="brand">Fahad Noor</div>
+        <div class="links"><span class="active">Biography</span><span>Powerlifting</span><span>Contact</span></div>
+      </div>
+      <div class="mute">♪</div>
+    </div>
+    <div class="caption">
+      <span>nav: <code>rgba(12,12,14,.35)</code> + <code>blur(16px)</code></span>
+      <span>toggle: <code>blur(8px)</code></span>
+    </div>
+    <p class="notes">The glassmorphism the Claude Design mockup was built for. Softer, more "luxury tech." Trade-off: retires the "no blur ever" rule, repaint cost on low-end phones, older-Android fallback quirks.</p>
+  </section>
+
+  <section class="variant c">
+    <span class="tag">Option C</span>
+    <h2>Hybrid — nav blurred, toggle solid</h2>
+    <div class="stage">
+      <div class="nav">
+        <div class="brand">Fahad Noor</div>
+        <div class="links"><span class="active">Biography</span><span>Powerlifting</span><span>Contact</span></div>
+      </div>
+      <div class="mute">♪</div>
+    </div>
+    <div class="caption">
+      <span>nav: <code>rgba(12,12,14,.55)</code> + <code>blur(12px)</code></span>
+      <span>toggle: solid <code>cream@12%</code></span>
+    </div>
+    <p class="notes">Blur lives only where it earns its keep — the sticky nav over photography. Everything inline stays solid. Scoped exception to the rule; smaller surface to police.</p>
+  </section>
+</body>
+</html>

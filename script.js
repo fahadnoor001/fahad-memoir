@@ -67,7 +67,6 @@ window.addEventListener('scroll', () => {
   const pageWords = {
     'index.html': 'Biography',
     'powerlifting.html': 'Strength',
-    'growth.html': 'Becoming',
     'contact.html': 'Connect'
   };
 

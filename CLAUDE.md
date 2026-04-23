@@ -4,11 +4,10 @@ Context for Claude Code sessions working on this repository. Read this first bef
 
 ## What this repo is
 
-A personal memoir and digital business card for Fahad — a static website (no build step, no framework) with four pages:
+A personal memoir and digital business card for Fahad — a static website (no build step, no framework) with three pages:
 
 - `index.html` — Biography (Houston)
 - `powerlifting.html` — Powerlifting
-- `growth.html` — Growth
 - `contact.html` — Contact
 
 All pages share `styles.css` and `script.js`. `contact.html` has extra styles in `contact.css`. `qr.js` is used on the contact page for a generated QR code.
@@ -29,7 +28,7 @@ The site follows a **"Monocle Editorial × Ritz-Carlton"** aesthetic. Specific r
 1. **No `backdrop-filter: blur`** anywhere. Glass cards use solid ivory `#F5F1EB`.
 2. **Italic Playfair Display is reserved for accents only** — max 3–4 italic declarations per page. Everything else uses upright Playfair weight 300.
 3. **Hard 1px hairline rules in warm charcoal** for section breaks — no gradients.
-4. **Chapter markers** appear above each major section (I. Biography, II. Powerlifting, III. Growth, IV. Contact) in Helvetica Neue tiny-caps above a full-width hairline rule.
+4. **Chapter markers** appear above each major section (I. Biography, II. Powerlifting, III. Contact) in Helvetica Neue tiny-caps above a full-width hairline rule.
 5. **Hero** is an asymmetric ivory block cutting into the lower third of a full-bleed Houston skyline background. Dark text on ivory, not light text on glass.
 6. **Color palette**: ivory `#F5F1EB`, warm charcoal, accent colors only as hairline rules.
 
@@ -88,7 +87,6 @@ fahad-memoir/
 │   └── profile-photo.jpeg         # Bio portrait (~136KB)
 ├── index.html                      # Biography page
 ├── powerlifting.html               # Powerlifting page
-├── growth.html                     # Growth page
 ├── contact.html                    # Contact page
 ├── styles.css                      # Main stylesheet (shared)
 ├── contact.css                     # Contact-page-only styles
