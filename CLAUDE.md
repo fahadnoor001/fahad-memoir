@@ -6,33 +6,66 @@ Context for Claude Code sessions working on this repository. Read this first bef
 
 A personal memoir and digital business card for Fahad — a static website (no build step, no framework) with three pages:
 
-- `index.html` — Biography (Houston)
-- `powerlifting.html` — Powerlifting
+- `index.html` — Biography (Houston) + video hero + 3 chapter modules
+- `powerlifting.html` — Powerlifting (Six years. Three lifts.)
 - `contact.html` — Contact
 
-All pages share `styles.css` and `script.js`. `contact.html` has extra styles in `contact.css`. `qr.js` is used on the contact page for a generated QR code.
+All pages share `styles.css` and `script.js`.
 
 ## Tech stack
 
 - **Vanilla HTML / CSS / JavaScript** — no React, no Vue, no build tools
-- **Node.js** only for the dev preview (`server.js` — uses built-in `http` module, no dependencies)
-- **No package.json** by design — there's nothing to `npm install`
-- **GitHub Pages** for hosting (deployed by `.github/workflows/pages.yml` on every push to `master`)
+- **Node.js** only for the dev preview (`server.js` — built-in `http` module, no deps)
+- **No package.json** by design
+- **GitHub Pages** hosting — `.github/workflows/pages.yml` deploys on push to `master`
 
 Live site: https://fahadnoor001.github.io/fahad-memoir/
+Intended custom domain: `fahadnoor.ai`
 
-## Design language (don't break this without asking)
+## Design language — "The Index"
 
-The site follows a **"Monocle Editorial × Ritz-Carlton"** aesthetic. Specific rules established over multiple iterations — violating them means re-doing work:
+**Ferrari / Rolls-Royce / Ritz-Carlton / Hublot palette.** Dark editorial. Integrated from the `Fahad Memoir-handoff.zip` Claude Design direction (2026-04-23).
 
-1. **No `backdrop-filter: blur`** anywhere. Glass cards use solid ivory `#F5F1EB`.
-2. **Italic Playfair Display is reserved for accents only** — max 3–4 italic declarations per page. Everything else uses upright Playfair weight 300.
-3. **Hard 1px hairline rules in warm charcoal** for section breaks — no gradients.
-4. **Chapter markers** appear above each major section (I. Biography, II. Powerlifting, III. Contact) in Helvetica Neue tiny-caps above a full-width hairline rule.
-5. **Hero** is an asymmetric ivory block cutting into the lower third of a full-bleed Houston skyline background. Dark text on ivory, not light text on glass.
-6. **Color palette**: ivory `#F5F1EB`, warm charcoal, accent colors only as hairline rules.
+### Palette (CSS custom properties in `:root`)
 
-When in doubt, match the existing `.hero`, `.credo`, and `.chapter-marker` sections in `styles.css` and `index.html`.
+| Token          | Value       | Use                                 |
+|----------------|-------------|-------------------------------------|
+| `--bg`         | `#0C0C0E`   | Hublot near-black, primary bg       |
+| `--bg-2`       | `#111115`   | Alt chapter bg, marquee, footer     |
+| `--bg-3`       | `#17171C`   | Tertiary panel                      |
+| `--cream`      | `#EAE3D0`   | Ritz-Carlton cream, primary text    |
+| `--cream-dim`  | `#9A9182`   | Body copy, dim text                 |
+| `--muted`      | `#4A453C`   | Copyright / ultra-quiet text        |
+| `--warm`       | `#B08A4A`   | Rolls champagne gold, accents       |
+| `--warm-bright`| `#D4B073`   | Ferrari highlight gold, hover       |
+| `--rule`       | `rgba(234,227,208,0.10)` | Hairline dividers          |
+| `--rule-strong`| `rgba(234,227,208,0.18)` | Grid separators            |
+
+### Typography
+
+- **Serif:** Cormorant Garamond, weight 300 (display) / 400 (body) — italic reserved for pull-quotes and page subtitles only
+- **Caps:** Inter, weight 500, letter-spacing 0.3em–0.42em, text-transform uppercase
+- **Mono:** JetBrains Mono for photo-frame labels (`HOUSTON — FIG. 1`)
+
+### Core components
+
+- **Sticky nav** — 20px 56px padding, `backdrop-filter: blur(16px)` over `rgba(12,12,14,0.94)`, active link has gold hairline underbar
+- **Video hero** (`index.html` only) — 860px tall, grayscale + grain + bottom fade, 30s loop trim, mute toggle with `backdrop-filter: blur(8px)`, "Houston · Texas" overlay bottom-left, scroll cue gold→transparent gradient
+- **Page hero** (other pages) — centered kicker + display title + italic subtitle on near-black
+- **Marquee** — infinite horizontal scroll, gold `◆` separators, Inter caps
+- **Featured quote** — 32px italic serif on bg-2 panel, gold attribution kicker
+- **Chapter module** — 1fr/1fr grid, 580px image tile, kicker + title + body + pull-quote + CTA; `.chapter--flip` swaps image to right via `direction: rtl`; `.chapter--alt` uses `--bg-2`
+- **Lifts grid** (powerlifting) — 3-column hairline-bordered grid, 96px Cormorant numbers
+- **Footer** — flex row, three text links + "© 2026 · Houston, Texas"
+
+### Design rules (don't break without asking)
+
+1. **Blur is allowed and intentional.** Nav uses `blur(16px)`, mute toggle uses `blur(8px)`, image labels use `blur(4px)` — this is the handoff spec.
+2. **Italic Cormorant is reserved for pull-quotes, hero subtitles, and featured quotes.** Everything else is upright weight 300 or 400.
+3. **Hairline rules** (`var(--rule)`) in semi-transparent cream separate sections — no gradients except the video hero fade and the scroll cue.
+4. **Chapter kickers** appear above each chapter body in Inter caps 10px letter-spacing 0.42em, colored `var(--warm)` (gold).
+5. **Photos are grayscale(0.25) contrast(1.05)** filtered in chapter modules — keeps them muted against the gold accent.
+6. **Alternating chapters** — swap bg via `.chapter--alt` and image side via `.chapter--flip` for editorial rhythm.
 
 ## How to develop
 
@@ -42,39 +75,31 @@ node server.js
 # opens http://localhost:3002
 ```
 
-No install required — just Node.js.
+No install required — just Node.js. The Claude Preview MCP runs this via `.claude/launch.json` config `memoir-site`.
 
 ### Branch workflow
 
 - **`master`** is the deploy branch. Every push to `master` auto-deploys to GitHub Pages (~1–2 min).
 - **Never commit directly to `master`.** Always work on a feature branch and open a PR.
 - **Branch naming**: `claude/<short-description>-<short-hash>` for Claude-authored work, `feature/<name>` for human-authored work.
-- Squash-merge PRs so `master` history stays clean.
+- Squash-merge PRs: `gh pr merge <N> --squash --delete-branch` (no `--auto` — GitHub Free blocks it).
 
-### When working from Claude Code on the web (iPhone / remote)
+### Repo layout warning — two clones on this PC
 
-1. Start a session with the repo URL
-2. Claude develops on a branch per the system instructions (e.g. `claude/<task>-xxxxx`)
-3. Commit + push to the feature branch
-4. Open a PR to `master` via the GitHub MCP tools
-5. The user reviews on their phone or PC and merges
+Two independent clones of this repo live on Fahad's PC, both pointing at `origin/master`:
 
-### When working from Claude Code on the local PC
+- **`C:\Users\fahad\Documents\AI\fahad-memoir\`** — TOP-LEVEL. Preview server + GitHub Pages deploy read from here. `__dirname` in `server.js` resolves to this path.
+- **`C:\Users\fahad\Documents\AI\memoir\fahad-memoir\`** — NESTED. Used for feature-branch work.
 
-1. `git pull origin master` first (to get any changes merged from iPhone sessions)
-2. Create a branch: `git checkout -b feature/my-change`
-3. Edit, preview with `node server.js`, commit
-4. `git push -u origin feature/my-change`
-5. Open a PR, merge when happy
+Edits in one clone are invisible to the other until `git push` + `git pull`. Intended flow: commit on nested → push → pull on top-level. Before editing, confirm which clone is being served via `preview_list` → match `cwd`. Full details: `~/.claude/projects/C--Users-fahad-Documents-AI/memory/project_memoir_repo_layout.md`.
 
 ## Things to avoid
 
-- **Don't add a build system** (Webpack, Vite, etc.) without explicit request. The "no build step" simplicity is intentional.
-- **Don't add dependencies** — the site must work as a pile of static files served from any HTTP server.
-- **Don't add a CSS framework** (Tailwind, Bootstrap) — the design is hand-crafted.
-- **Don't commit the `.netlify/` folder** — it's gitignored. Netlify is no longer used for this project.
-- **Don't put secrets in code.** There are no secrets in this repo and there shouldn't be.
-- **Don't reintroduce `backdrop-filter: blur`.** Ever.
+- **Don't add a build system.** The "no build step" simplicity is intentional.
+- **Don't add dependencies.** Must work as static files served from any HTTP server.
+- **Don't add a CSS framework.** Hand-crafted.
+- **Don't put secrets in code.**
+- **Don't revert to the old ivory "Monocle Editorial" palette.** That aesthetic was retired 2026-04-23 when the dark Claude Design handoff was integrated.
 
 ## File map
 
@@ -83,22 +108,22 @@ fahad-memoir/
 ├── .github/workflows/pages.yml    # GitHub Pages deploy on push to master
 ├── .claude/launch.json             # Dev preview config for Claude Code
 ├── assets/
-│   ├── houston-skyline.jpg        # Hero background (~147KB)
-│   └── profile-photo.jpeg         # Bio portrait (~136KB)
-├── index.html                      # Biography page
-├── powerlifting.html               # Powerlifting page
-├── contact.html                    # Contact page
-├── styles.css                      # Main stylesheet (shared)
-├── contact.css                     # Contact-page-only styles
-├── script.js                       # Main JS (shared)
-├── qr.js                           # Contact page QR generator
+│   ├── houston-skyline.jpg        # Chapter I image (~147KB)
+│   └── profile-photo.jpeg         # Chapter II image (~136KB)
+├── index.html                      # Biography + video hero + 3 chapters
+├── powerlifting.html               # Powerlifting + lifts grid
+├── contact.html                    # Contact
+├── styles.css                      # Dark-palette stylesheet (shared)
+├── script.js                       # Mute toggle + mobile nav + smooth scroll
 ├── server.js                       # Local dev preview server (Node built-ins only)
 ├── CLAUDE.md                       # This file
 ├── README.md                       # Human-facing project overview
 └── .gitignore
 ```
 
-## Recent history (for context)
+Deprecated / removed: `contact.css`, `qr.js`, `growth.html`.
 
-- **Monocle Editorial Pivot** — killed all blur, added chapter markers, redesigned hero as ivory block
-- **GitHub Pages deploy workflow added** — auto-deploys master to `fahadnoor001.github.io/fahad-memoir`
+## Recent history
+
+- **2026-04-23 — Dark handoff integration.** Full rebuild on `Fahad Memoir-handoff.zip` Claude Design direction. Cormorant Garamond serif. Near-black `#0C0C0E` bg. Champagne gold `#B08A4A` accents. Video hero with mute toggle. Alternating chapter modules. Six-year powerlifting history. Growth tab retired.
+- **Pre-2026-04-23** (retired) — "Monocle Editorial × Ritz-Carlton" ivory aesthetic with `#F5F1EB` bg, Playfair Display, no-blur rule.
