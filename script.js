@@ -4,12 +4,24 @@
 (function () {
   'use strict';
 
-  // ===== LOADER =====
+  // ===== LOADER — transitions into page (shared-element style) =====
+  document.body.classList.add('loading');
+  document.body.style.overflow = 'hidden';
   window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
-    if (!loader) return;
-    setTimeout(() => loader.classList.add('hidden'), 1200);
-    setTimeout(() => loader.remove(), 2000);
+    if (!loader) {
+      document.body.classList.remove('loading');
+      document.body.style.overflow = '';
+      return;
+    }
+    // hold briefly so the sweep is visible, then begin the handoff
+    setTimeout(() => {
+      loader.classList.add('exiting');
+      document.body.classList.remove('loading');
+      document.body.style.overflow = '';
+    }, 900);
+    // after the transform + bg fade finish, remove node
+    setTimeout(() => loader.classList.add('gone'), 2200);
   });
 
   // ===== VIDEO HERO: mute toggle + 30s loop trim =====
