@@ -4,6 +4,14 @@
 (function () {
   'use strict';
 
+  // ===== LOADER =====
+  window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if (!loader) return;
+    setTimeout(() => loader.classList.add('hidden'), 1200);
+    setTimeout(() => loader.remove(), 2000);
+  });
+
   // ===== VIDEO HERO: mute toggle + 30s loop trim =====
   const video = document.getElementById('heroVideo');
   const muteBtn = document.getElementById('muteToggle');

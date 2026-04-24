@@ -22,6 +22,38 @@
   --mono:  'JetBrains Mono', monospace;
 }
 
+/* LOADER */
+.loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 40px;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.loader.hidden { opacity: 0; visibility: hidden; }
+.loader-logo {
+  font-family: var(--serif);
+  font-size: 56px; font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+.loader-bar {
+  width: 260px; height: 1px;
+  background: var(--rule);
+  position: relative; overflow: hidden;
+}
+.loader-bar::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, var(--warm) 30%, var(--warm-bright) 60%, transparent);
+  transform: translateX(-100%);
+  animation: loader-sweep 1.4s ease-in-out infinite;
+}
+@keyframes loader-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 *,*::before,*::after { box-sizing: border-box; }
 html,body { margin: 0; padding: 0; }
 body {
